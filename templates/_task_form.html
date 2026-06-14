@@ -1,0 +1,19 @@
+<section class="panel form-panel fade-in">
+    <form method="post" class="task-form">
+        {{ form.hidden_tag() }}
+        <div class="form-floating mb-3">{{ form.title(class="form-control", placeholder="Title") }}{{ form.title.label }}{% for error in form.title.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        <div class="form-floating mb-3">{{ form.description(class="form-control textarea", placeholder="Description") }}{{ form.description.label }}{% for error in form.description.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        <div class="row g-3">
+            <div class="col-md-4"><div class="form-floating">{{ form.priority(class="form-select") }}{{ form.priority.label }}</div></div>
+            <div class="col-md-4"><div class="form-floating">{{ form.category(class="form-control", list="categoryOptions", placeholder="Category") }}{{ form.category.label }}</div></div>
+            <div class="col-md-4"><div class="form-floating">{{ form.due_date(class="form-control") }}{{ form.due_date.label }}</div></div>
+        </div>
+        <datalist id="categoryOptions">
+            <option value="Study"><option value="Assignment"><option value="Project"><option value="Exam"><option value="Personal">
+        </datalist>
+        <div class="form-actions">
+            <a href="{{ url_for('tasks') }}" class="btn btn-ghost">Cancel</a>
+            {{ form.submit(class="btn btn-primary glow-btn") }}
+        </div>
+    </form>
+</section>

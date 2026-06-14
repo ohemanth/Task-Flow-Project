@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Profile | TaskFlow{% endblock %}
+{% block eyebrow %}Account settings{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% block content %}
+<section class="profile-grid fade-in">
+    <div class="panel profile-card">
+        <div class="avatar xl">{{ current_user.initials }}</div>
+        <h2>{{ current_user.fullname }}</h2>
+        <p>{{ current_user.email }}</p>
+        <span class="joined"><i class="fa-regular fa-calendar-check"></i> Joined {{ current_user.created_at.strftime("%b %Y") }}</span>
+    </div>
+
+    <div class="panel form-panel">
+        <div class="section-heading"><h2>Profile information</h2></div>
+        <form method="post">
+            {{ profile_form.hidden_tag() }}
+            <div class="form-floating mb-3">{{ profile_form.fullname(class="form-control", placeholder="Full Name") }}{{ profile_form.fullname.label }}</div>
+            <div class="form-floating mb-3">{{ profile_form.email(class="form-control", placeholder="Email") }}{{ profile_form.email.label }}</div>
+            <div class="form-floating mb-3">{{ profile_form.username(class="form-control", placeholder="Username") }}{{ profile_form.username.label }}</div>
+            <input type="hidden" name="update_profile" value="1">
+            {{ profile_form.submit(class="btn btn-primary glow-btn") }}
+        </form>
+    </div>
+
+    <div class="panel form-panel">
+        <div class="section-heading"><h2>Change password</h2></div>
+        <form method="post">
+            {{ password_form.hidden_tag() }}
+            <div class="form-floating mb-3">{{ password_form.current_password(class="form-control", placeholder="Current Password") }}{{ password_form.current_password.label }}</div>
+            <div class="form-floating mb-3">{{ password_form.new_password(class="form-control", placeholder="New Password") }}{{ password_form.new_password.label }}</div>
+            <div class="form-floating mb-3">{{ password_form.confirm_password(class="form-control", placeholder="Confirm Password") }}{{ password_form.confirm_password.label }}</div>
+            <input type="hidden" name="change_password" value="1">
+            {{ password_form.submit(class="btn btn-primary glow-btn") }}
+        </form>
+    </div>
+</section>
+{% endblock %}

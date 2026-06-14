@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Calendar | TaskFlow{% endblock %}
+{% block eyebrow %}Deadline map{% endblock %}
+{% block page_title %}Calendar{% endblock %}
+{% block content %}
+<section class="calendar-layout fade-in">
+    <div class="panel calendar-panel">
+        <div class="calendar-grid">
+            {% for offset in range(0, 30) %}
+                {% set day = today + timedelta(days=offset) %}
+                {% set day_tasks = tasks|selectattr("due_date", "equalto", day)|list %}
+                <div class="day-cell {% if day == today %}today{% endif %}">
+                    <div class="day-head"><span>{{ day.strftime("%a") }}</span><strong>{{ day.day }}</strong></div>
+                    {% for task in day_tasks[:3] %}
+                        <a href="{{ url_for('edit_task', task_id=task.id) }}" class="calendar-task priority-{{ task.priority|lower }} {% if task.is_overdue %}overdue{% endif %}">
+                            {{ task.title }}
+                        </a>
+                    {% endfor %}
+                    {% if day_tasks|length > 3 %}<small>+{{ day_tasks|length - 3 }} more</small>{% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <aside class="panel side-panel">
+        <div class="section-heading"><h2>Next 30 days</h2><span>{{ window_tasks|length }}</span></div>
+        <div class="timeline-list">
+            {% for task in window_tasks %}
+                <div class="timeline-item {% if task.is_overdue %}danger-item{% elif task.is_today %}today-item{% endif %}">
+                    <span class="timeline-dot"></span>
+                    <div>
+                        <strong>{{ task.title }}</strong>
+                        <small>{{ task.category }} · {{ task.due_date.strftime("%b %d") }}</small>
+                    </div>
+                </div>
+            {% else %}
+                <p class="muted">Nothing due in the next 30 days.</p>
+            {% endfor %}
+        </div>
+    </aside>
+</section>
+{% endblock %}

@@ -1,0 +1,50 @@
+<article class="task-card fade-in"
+         draggable="true"
+         data-task-id="{{ task.id }}"
+         data-title="{{ task.title|lower }}"
+         data-category="{{ task.category }}"
+         data-priority="{{ task.priority }}"
+         data-status="{{ 'completed' if task.completed else 'pending' }}">
+    <div class="task-card-top">
+        <form method="post" action="{{ url_for('toggle_task', task_id=task.id) }}" class="toggle-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="complete-dot {% if task.completed %}done{% endif %}" type="submit" aria-label="Toggle completion">
+                <i class="fa-solid fa-check"></i>
+            </button>
+        </form>
+        <span class="priority-pill priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+    </div>
+    <h3 class="{% if task.completed %}text-decoration-line-through opacity-75{% endif %}">{{ task.title }}</h3>
+    <p>{{ task.description or "No description added." }}</p>
+    <div class="task-meta">
+        <span><i class="fa-regular fa-folder"></i>{{ task.category }}</span>
+        <span class="{% if task.is_overdue %}danger-text{% elif task.is_today %}today-text{% endif %}">
+            <i class="fa-regular fa-clock"></i>{{ task.due_date.strftime("%b %d, %Y") }}
+        </span>
+    </div>
+    <div class="task-actions">
+        <a href="{{ url_for('edit_task', task_id=task.id) }}" class="icon-btn" title="Edit"><i class="fa-regular fa-pen-to-square"></i></a>
+        <button type="button" class="icon-btn danger" data-bs-toggle="modal" data-bs-target="#deleteTask{{ task.id }}" title="Delete">
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
+    </div>
+</article>
+
+<div class="modal fade" id="deleteTask{{ task.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Delete task?</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">This will permanently remove "{{ task.title }}".</div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

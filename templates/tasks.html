@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Tasks | TaskFlow{% endblock %}
+{% block eyebrow %}Organize and ship{% endblock %}
+{% block page_title %}Tasks{% endblock %}
+{% block content %}
+<section class="panel fade-in">
+    <div class="toolbar">
+        <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="taskSearch" type="search" placeholder="Search tasks"></div>
+        <select id="categoryFilter" class="form-select">
+            <option value="">All categories</option>
+            {% for category in categories %}<option value="{{ category }}">{{ category }}</option>{% endfor %}
+        </select>
+        <select id="priorityFilter" class="form-select">
+            <option value="">All priorities</option><option>Low</option><option>Medium</option><option>High</option>
+        </select>
+        <select id="statusFilter" class="form-select">
+            <option value="">All status</option><option value="pending">Pending</option><option value="completed">Completed</option>
+        </select>
+    </div>
+    <div class="progress progress-flow mb-4"><div class="progress-bar" style="width: {{ stats.progress }}%"></div></div>
+    <div id="taskList" class="task-grid">
+        {% for task in tasks %}
+            {% include "_task_card.html" %}
+        {% else %}
+            <div class="empty-state wide">
+                <i class="fa-regular fa-square-check"></i>
+                <h3>Your task board is empty</h3>
+                <p>Add assignments, projects, exams, or anything else asking for your attention.</p>
+                <a href="{{ url_for('add_task') }}" class="btn btn-primary glow-btn">Create task</a>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="noResults" class="empty-state wide d-none"><i class="fa-solid fa-filter-circle-xmark"></i><h3>No matching tasks</h3><p>Try a different search or filter combination.</p></div>
+    {% if pagination.pages > 1 %}
+        <nav class="mt-4">
+            <ul class="pagination">
+                {% for page in pagination.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item {% if page == pagination.page %}active{% endif %}"><a class="page-link" href="{{ url_for('tasks', page=page) }}">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}

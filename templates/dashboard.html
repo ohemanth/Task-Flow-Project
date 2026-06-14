@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | TaskFlow{% endblock %}
+{% block eyebrow %}Today is {{ today.strftime("%A, %b %d") }}{% endblock %}
+{% block page_title %}Welcome back, {{ current_user.fullname.split()[0] }}{% endblock %}
+{% block content %}
+<section class="stats-grid fade-in">
+    <div class="stat-card indigo"><i class="fa-solid fa-layer-group"></i><span>Total Tasks</span><strong>{{ stats.total }}</strong></div>
+    <div class="stat-card cyan"><i class="fa-solid fa-circle-check"></i><span>Completed</span><strong>{{ stats.completed }}</strong></div>
+    <div class="stat-card violet"><i class="fa-solid fa-hourglass-half"></i><span>Pending</span><strong>{{ stats.pending }}</strong></div>
+    <div class="stat-card rose"><i class="fa-solid fa-triangle-exclamation"></i><span>Overdue</span><strong>{{ stats.overdue }}</strong></div>
+</section>
+
+<section class="dashboard-grid">
+    <div class="panel main-panel">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Progress</p>
+                <h2>Completion pulse</h2>
+            </div>
+            <strong>{{ stats.progress }}%</strong>
+        </div>
+        <div class="progress progress-flow"><div class="progress-bar" style="width: {{ stats.progress }}%"></div></div>
+        <div class="task-grid compact mt-4">
+            {% for task in tasks %}
+                {% include "_task_card.html" %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fa-regular fa-clipboard"></i>
+                    <h3>No tasks yet</h3>
+                    <p>Create your first task and give the week a shape.</p>
+                    <a class="btn btn-primary glow-btn" href="{{ url_for('add_task') }}">Add task</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <aside class="panel side-panel">
+        <div class="section-heading"><h2>Upcoming</h2><a href="{{ url_for('calendar') }}">Calendar</a></div>
+        <div class="timeline-list">
+            {% for task in upcoming %}
+                <div class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div><strong>{{ task.title }}</strong><small>{{ task.category }} · {{ task.due_date.strftime("%b %d") }}</small></div>
+                </div>
+            {% else %}
+                <p class="muted">No upcoming deadlines.</p>
+            {% endfor %}
+        </div>
+        <hr>
+        <div class="section-heading"><h2>Overdue</h2><span>{{ overdue|length }}</span></div>
+        <div class="timeline-list">
+            {% for task in overdue %}
+                <div class="timeline-item danger-item">
+                    <span class="timeline-dot"></span>
+                    <div><strong>{{ task.title }}</strong><small>{{ task.due_date.strftime("%b %d") }}</small></div>
+                </div>
+            {% else %}
+                <p class="muted">No overdue work. Clean slate.</p>
+            {% endfor %}
+        </div>
+    </aside>
+</section>
+{% endblock %}

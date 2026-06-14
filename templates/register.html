@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Create account | TaskFlow{% endblock %}
+{% block auth %}
+<section class="auth-card fade-in">
+    <div class="auth-copy">
+        <span class="brand auth-brand"><span class="brand-mark"><i class="fa-solid fa-bolt"></i></span>TaskFlow</span>
+        <h1>Your semester, beautifully organized.</h1>
+        <p>Build a personal command center for every deadline, category, and study sprint.</p>
+    </div>
+    <form method="post" class="glass-form">
+        {{ form.hidden_tag() }}
+        <h2>Create account</h2>
+        <div class="form-floating mb-3">{{ form.fullname(class="form-control", placeholder="Full Name") }}{{ form.fullname.label }}{% for error in form.fullname.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        <div class="form-floating mb-3">{{ form.email(class="form-control", placeholder="Email") }}{{ form.email.label }}{% for error in form.email.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        <div class="form-floating mb-3">{{ form.username(class="form-control", placeholder="Username") }}{{ form.username.label }}{% for error in form.username.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        <div class="form-floating mb-3">{{ form.password(class="form-control", placeholder="Password") }}{{ form.password.label }}{% for error in form.password.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        <div class="form-floating mb-4">{{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}{{ form.confirm_password.label }}{% for error in form.confirm_password.errors %}<div class="invalid-copy">{{ error }}</div>{% endfor %}</div>
+        {{ form.submit(class="btn btn-primary w-100 glow-btn") }}
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+    </form>
+</section>
+{% endblock %}
